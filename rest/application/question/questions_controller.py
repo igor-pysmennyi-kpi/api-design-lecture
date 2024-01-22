@@ -6,7 +6,6 @@ from application.question.questions_service import QuestionFilters
 
 @app.route('/questions', methods=['POST'])
 def create_question():
-
     request_data = request.json
     question = questions_service.create_question(request_data)
     return jsonify(question), 201
@@ -14,8 +13,8 @@ def create_question():
 @app.route('/questions', methods=['GET'])
 def get_questions():
     author_id = request.args.get('author_id')
-    page = request.args.get('page')
-    size = request.args.get('size')
+    page = int(request.args.get('page'))
+    size = int(request.args.get('size'))
 
     questions = questions_service.get_questions(QuestionFilters(author_id), page, size)
     questions.print_content()

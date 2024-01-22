@@ -15,8 +15,8 @@ def create_answer():
 def get_answers():
     author_id = request.args.get('author_id')
     question_id = request.args.get('question_id')
-    page = request.args.get('page')
-    size = request.args.get('size')
+    page = int(request.args.get('page'))
+    size = int(request.args.get('size'))
 
     answers = answers_service.get_answers(AnswerFilters(author_id,question_id), page, size)
     answers.print_content()
@@ -39,3 +39,12 @@ def update_answer(answer_id):
     return jsonify(answer), 200
 
 # Питання з *** - як реалізуємо апвоут?
+@app.route('/answers/<answer_id>/upvote', methods=['POST'])
+def upvote(answer_id):
+    answers_service.upvote(answer_id)
+    return '', 201
+
+@app.route('/answers/<answer_id>/downvote', methods=['POST'])
+def downvote(answer_id):
+    answers_service.downvote(answer_id)
+    return '', 201
