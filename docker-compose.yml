@@ -1,0 +1,13 @@
+version: '3.8'
+services:
+  app:
+    build: ./rest
+    ports:
+      - "5000:5000"
+    volumes:
+      - tinydb-data:/app/data
+    environment:
+      - TINYDB_PATH=/app/data/db.json  # TODO, check if I am using it
+
+volumes:
+  tinydb-data:
