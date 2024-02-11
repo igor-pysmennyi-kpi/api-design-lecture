@@ -1,7 +1,7 @@
 import os
 
-SECRET_KEY = 12345678
 basedir = os.path.abspath(os.path.dirname(__file__))
 DEBUG = True
-SQLALCHEMY_DATABASE_URI = 'localhost:5432'
+SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or \
+        'postgresql://postgres:dummypassword@postgres:5432/postgres'
 SQLALCHEMY_TRACK_MODIFICATIONS = False
