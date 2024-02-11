@@ -11,9 +11,9 @@ class Page(Generic[T], db.Model):
     __tablename__ = 'pages'
 
     id_col = db.Column(db.VARCHAR(12), primary_key=True)
-    size_col = db.Column(db.Int)
-    page_col = db.Column(db.Int)
-    total_pages_col = db.Column(db.Int)
+    size_col = db.Column(db.Integer)
+    page_col = db.Column(db.Integer)
+    total_pages_col = db.Column(db.Integer)
     content_col = db.Column(db.String(120))  
 
     def __init__(self, size: int, page: int, total_pages: int, content: List[T]):

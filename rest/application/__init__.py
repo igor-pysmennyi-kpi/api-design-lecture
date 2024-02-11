@@ -15,8 +15,8 @@ migrate = Migrate(app, db)
 app.register_blueprint(answer_bp)
 app.register_blueprint(questions_bp)
 
-# questions_service  = QuestionsService()
-# answers_service = AnswerService()
+questions_service  = QuestionsService()
+answers_service = AnswerService()
 
-# import application.question.questions_controller
-# import application.answer.answer_controller
+import application.question.questions_controller
+import application.answer.answer_controller
