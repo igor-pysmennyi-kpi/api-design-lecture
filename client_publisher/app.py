@@ -1,17 +1,16 @@
 from typing import TYPE_CHECKING
 import os
 import logging
+import threading
 
 from flask import Flask, render_template, request, jsonify
 
 from sender import send_msg
-
-if TYPE_CHECKING:
-    from werkzeug.datastructures import FileStorage
+from listen_queue import listen_queue
 
 # configure application
 flask_app = Flask(__name__)
-logging.basicConfig(level=logging.DEBUG)
+logging.basicConfig(level=logging.INFO)
 
 
 @flask_app.route("/")
@@ -28,6 +27,20 @@ def infer_model():
         send_msg(command, flask_app.logger)
 
         return jsonify({"status": "Successfully sent file"})
+    except Exception as exc:
+        flask_app.logger.error(exc)
+        return jsonify({"status": "Sending the request failed"})
+    
+
+@flask_app.route("/get_result", methods=["GET"])
+def get_result():
+    """Get the result message from the RabbitMQ."""
+    try:
+        thread = threading.Thread(target=listen_queue, args=('flask_app.logger',))
+        thread.start()
+        thread.join()
+        return jsonify(message=flask_app.config.get('MESSAGE', 'No message received'))
+
     except Exception as exc:
         flask_app.logger.error(exc)
         return jsonify({"status": "Sending the request failed"})

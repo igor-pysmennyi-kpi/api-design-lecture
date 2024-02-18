@@ -37,10 +37,12 @@ def listen_queue(logger: "Logger"):
                     if time.time() - start_time > timeout:
                         break
 
+                ch.queue_declare(queue=QUEUE2_NAME)
+
                 ch.basic_publish(
                     exchange='',
                     routing_key=QUEUE2_NAME,
-                    body='model_finished'
+                    body=bytes('model_finished'.encode())
                 )
             logger.info("Model has finished the work")
 
