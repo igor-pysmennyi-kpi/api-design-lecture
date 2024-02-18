@@ -1,0 +1,7 @@
+FROM python:3.10-slim-buster
+WORKDIR /usr/src/model_service
+COPY ./model_service /usr/src/model_service
+RUN apt update && \
+    apt install gcc python3-dev -y libpq-dev -y
+RUN pip install -r requirements.txt
+CMD [ "python3", "app.py"]
