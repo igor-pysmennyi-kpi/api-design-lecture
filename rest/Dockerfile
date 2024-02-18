@@ -21,4 +21,6 @@ EXPOSE 5000
 # Run app.py when the container launches
 # https://spacelift.io/blog/docker-entrypoint-vs-cmd
 # ENTRYPOINT [ "python" ] 
+EXPOSE 5000
+CMD [ "python3", "-m" , "flask", "run", "--host=0.0.0.0", "--port=5010"]
 CMD ["bash", "/app/rest/start_flask.sh"]
