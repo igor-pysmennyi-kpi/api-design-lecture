@@ -1,0 +1,8 @@
+FROM python:3.10-slim-buster
+WORKDIR /usr/src/client_publisher
+COPY ./client_publisher /usr/src/client_publisher
+RUN apt update && \
+    apt install gcc python3-dev -y libpq-dev -y
+RUN pip install -r requirements.txt
+EXPOSE 5010
+CMD [ "python3", "-m" , "flask", "run", "--host=0.0.0.0", "--port=5010"]

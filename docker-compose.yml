@@ -1,0 +1,74 @@
+version: "3.9"
+services:
+  postgres:
+    image: postgres:16.1
+    restart: always
+    hostname: postgres
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: dummypassword
+    ports:
+      - "5432:5432"
+    networks:
+      - privateNet
+
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - "8080:8080"
+    networks:
+      - privateNet
+  
+  rabbitmq:
+    image: rabbitmq:3.9.5-management-alpine
+    container_name: 'rabbitmq'
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    networks:
+      - privateNet
+
+  rest_app:
+    image: rest_app
+    build:
+      context: ./
+      dockerfile: ./rest/Dockerfile
+    ports:
+      - "5000:5000"
+    networks:
+      - privateNet
+    depends_on:
+      - postgres
+    environment:
+      DATABASE_URL: postgresql://postgres:dummypassword@postgres:5432/postgres
+
+  client_publisher:
+    image: client_publisher
+    build:
+      context: ./
+      dockerfile: ./client_publisher/Dockerfile_publisher
+    ports:
+      - "5010:5010"
+    networks:
+      - privateNet
+
+  model_service:
+    image: model_service
+    restart: on-failure
+    build:
+      context: ./
+      dockerfile: ./model_service/Dockerfile_subscriber
+    depends_on:
+      - rabbitmq
+    networks:
+      - privateNet
+
+volumes:
+  postgres-data:
+
+networks:
+  privateNet:
+    driver: bridge
